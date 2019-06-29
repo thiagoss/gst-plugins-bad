@@ -63,6 +63,7 @@ enum
 {
   PROP_0,
   PROP_PARSE_PRIVATE_SECTIONS,
+  PROP_PRESERVE_MPEGTS_TIMESTAMPS,
   /* FILL ME */
 };
 
@@ -142,6 +143,13 @@ mpegts_base_class_init (MpegTSBaseClass * klass)
           "Parse private sections", FALSE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+  g_object_class_install_property (gobject_class,
+      PROP_PRESERVE_MPEGTS_TIMESTAMPS,
+      g_param_spec_boolean ("preserve-mpegts-timestamps",
+          "Keep the mpegts timestamps on buffers",
+          "Keep the mpegts timestamps instead of rebasing them to start from 0",
+          FALSE, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
   klass->sink_query = GST_DEBUG_FUNCPTR (mpegts_base_default_sink_query);
 }
 
@@ -154,6 +162,10 @@ mpegts_base_set_property (GObject * object, guint prop_id,
   switch (prop_id) {
     case PROP_PARSE_PRIVATE_SECTIONS:
       base->parse_private_sections = g_value_get_boolean (value);
+      break;
+    case PROP_PRESERVE_MPEGTS_TIMESTAMPS:
+      base->preserve_ts_timestamps = g_value_get_boolean (value);
+      base->packetizer->preserve_ts_timestamps = base->preserve_ts_timestamps;
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -169,6 +181,9 @@ mpegts_base_get_property (GObject * object, guint prop_id,
   switch (prop_id) {
     case PROP_PARSE_PRIVATE_SECTIONS:
       g_value_set_boolean (value, base->parse_private_sections);
+      break;
+    case PROP_PRESERVE_MPEGTS_TIMESTAMPS:
+      g_value_set_boolean (value, base->preserve_ts_timestamps);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

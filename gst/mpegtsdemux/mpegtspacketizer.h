@@ -263,6 +263,10 @@ struct _MpegTSPacketizer2 {
   /* offset/bitrate calculator */
   gboolean       calculate_offset;
 
+  /* if mpegts timeline should be preserved instead of
+   * transposing to 0-based timetamps */
+  gboolean       preserve_ts_timestamps;
+
   /* Shortcuts for adapter usage */
   guint8 *map_data;
   gsize map_offset;

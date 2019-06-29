@@ -157,6 +157,9 @@ struct _MpegTSBase {
   /* Whether to parse private section or not */
   gboolean parse_private_sections;
 
+  /* Wheter mpegts timestamps should be rebased to 0 or not */
+  gboolean preserve_ts_timestamps;
+
   /* Whether to push data and/or sections to subclasses */
   gboolean push_data;
   gboolean push_section;

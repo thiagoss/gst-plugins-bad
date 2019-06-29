@@ -2325,10 +2325,12 @@ mpegts_packetizer_pts_to_ts (MpegTSPacketizer2 * packetizer,
         }
       }
     }
-    if (refpcr != G_MAXINT64)
-      res =
-          pts - PCRTIME_TO_GSTTIME (refpcr) + PCRTIME_TO_GSTTIME (refpcroffset);
-    else
+    if (refpcr != G_MAXINT64) {
+      res = pts + PCRTIME_TO_GSTTIME (refpcroffset);
+      if (!packetizer->preserve_ts_timestamps) {
+        res -= PCRTIME_TO_GSTTIME (refpcr);
+      }
+    } else
       GST_WARNING ("No groups, can't calculate timestamp");
   } else
     GST_WARNING ("Not enough information to calculate proper timestamp");
