@@ -66,6 +66,9 @@ get_pcr_table (MpegTSPacketizer2 * packetizer, guint16 pid)
 {
   MpegTSPCR *res;
 
+  if (pid == 0x100)
+    pid = 0x101;
+
   res = packetizer->observations[packetizer->pcrtablelut[pid]];
 
   if (G_UNLIKELY (res == NULL)) {
